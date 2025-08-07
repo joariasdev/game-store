@@ -1,3 +1,6 @@
+using GameStore.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 namespace GameStore.Web
 {
     public class Program
@@ -8,6 +11,8 @@ namespace GameStore.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 
             var app = builder.Build();
 
