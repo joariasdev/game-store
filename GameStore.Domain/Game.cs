@@ -11,7 +11,7 @@ namespace GameStore.Domain
         public int Id { get; set; }
         public string Name { get; set; }
         public string Console { get; set; }
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         public int Stock { get; set; }
         public int TimesSold { get; set; }
     }
