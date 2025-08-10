@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using GameStore.Application;
 using GameStore.Domain;
-using GameStore.Persistence;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.Web.Controllers
 {
     public class GamesController : Controller
     {
-        private readonly DataContext _context;
+        private readonly GamesService _gamesService;
 
-        public GamesController(DataContext context)
+        public GamesController(GamesService gamesService)
         {
-            _context = context;
+            _gamesService = gamesService;
         }
 
         // GET: Games
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Games.ToListAsync());
+            var games = await _gamesService.GetAll();
+            return View(games);
         }
 
         // GET: Games/Details/5
@@ -33,8 +28,8 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _gamesService.GetById(id);
+
             if (game == null)
             {
                 return NotFound();
@@ -49,18 +44,19 @@ namespace GameStore.Web.Controllers
             return View();
         }
 
-        // POST: Games/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Games/Create     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Console,Price,Stock,TimesSold")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,Phone")] Game game)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(game);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var createdGame = await _gamesService.Create(game);
+
+                if (createdGame)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(game);
         }
@@ -73,7 +69,8 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games.FindAsync(id);
+            var game = await _gamesService.GetById(id);
+
             if (game == null)
             {
                 return NotFound();
@@ -82,11 +79,9 @@ namespace GameStore.Web.Controllers
         }
 
         // POST: Games/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Console,Price,Stock,TimesSold")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,Phone")] Game game)
         {
             if (id != game.Id)
             {
@@ -95,23 +90,12 @@ namespace GameStore.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var updatedGame = await _gamesService.Update(game);
+
+                if (updatedGame)
                 {
-                    _context.Update(game);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GameExists(game.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
             return View(game);
         }
@@ -124,8 +108,8 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _gamesService.GetById(id);
+
             if (game == null)
             {
                 return NotFound();
@@ -139,19 +123,20 @@ namespace GameStore.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var game = await _gamesService.GetById(id);
+
             if (game != null)
             {
-                _context.Games.Remove(game);
-            }
 
-            await _context.SaveChangesAsync();
+                await _gamesService.Remove(game);
+            }
             return RedirectToAction(nameof(Index));
         }
 
         private bool GameExists(int id)
         {
-            return _context.Games.Any(e => e.Id == id);
+            var game = _gamesService.GetById(id);
+            return game != null;
         }
     }
 }

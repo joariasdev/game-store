@@ -17,6 +17,7 @@ namespace GameStore.Web
 
             builder.Services.AddScoped<CustomersService>();
             builder.Services.AddScoped<ConsolesService>();
+            builder.Services.AddScoped<GamesService>();
 
             var app = builder.Build();
 
