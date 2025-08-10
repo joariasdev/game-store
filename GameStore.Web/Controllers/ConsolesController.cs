@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using GameStore.Application;
 using GameStore.Domain;
-using GameStore.Persistence;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.Web.Controllers
 {
     public class ConsolesController : Controller
     {
-        private readonly DataContext _context;
+        private readonly ConsolesService _consolesService;
 
-        public ConsolesController(DataContext context)
+        public ConsolesController(ConsolesService consolesService)
         {
-            _context = context;
+            _consolesService = consolesService;
         }
 
         // GET: Consoles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Consoles.ToListAsync());
+            var consoles = await _consolesService.GetAll();
+            return View(consoles);
         }
 
         // GET: Consoles/Details/5
@@ -33,14 +28,14 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var gameConsole = await _context.Consoles
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (gameConsole == null)
+            var console = await _consolesService.GetById(id);
+
+            if (console == null)
             {
                 return NotFound();
             }
 
-            return View(gameConsole);
+            return View(console);
         }
 
         // GET: Consoles/Create
@@ -49,20 +44,21 @@ namespace GameStore.Web.Controllers
             return View();
         }
 
-        // POST: Consoles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Consoles/Create     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,Manufacturer,Stock,TimesSold")] GameConsole gameConsole)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,Phone")] GameConsole console)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gameConsole);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var createdConsole = await _consolesService.Create(console);
+
+                if (createdConsole)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            return View(gameConsole);
+            return View(console);
         }
 
         // GET: Consoles/Edit/5
@@ -73,47 +69,35 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var gameConsole = await _context.Consoles.FindAsync(id);
-            if (gameConsole == null)
+            var console = await _consolesService.GetById(id);
+
+            if (console == null)
             {
                 return NotFound();
             }
-            return View(gameConsole);
+            return View(console);
         }
 
         // POST: Consoles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Manufacturer,Stock,TimesSold")] GameConsole gameConsole)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,Phone")] GameConsole console)
         {
-            if (id != gameConsole.Id)
+            if (id != console.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                var updatedConsole = await _consolesService.Update(console);
+
+                if (updatedConsole)
                 {
-                    _context.Update(gameConsole);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GameConsoleExists(gameConsole.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            return View(gameConsole);
+            return View(console);
         }
 
         // GET: Consoles/Delete/5
@@ -124,14 +108,14 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var gameConsole = await _context.Consoles
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (gameConsole == null)
+            var console = await _consolesService.GetById(id);
+
+            if (console == null)
             {
                 return NotFound();
             }
 
-            return View(gameConsole);
+            return View(console);
         }
 
         // POST: Consoles/Delete/5
@@ -139,19 +123,20 @@ namespace GameStore.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var gameConsole = await _context.Consoles.FindAsync(id);
-            if (gameConsole != null)
-            {
-                _context.Consoles.Remove(gameConsole);
-            }
+            var console = await _consolesService.GetById(id);
 
-            await _context.SaveChangesAsync();
+            if (console != null)
+            {
+
+                await _consolesService.Remove(console);
+            }
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GameConsoleExists(int id)
+        private bool ConsoleExists(int id)
         {
-            return _context.Consoles.Any(e => e.Id == id);
+            var console = _consolesService.GetById(id);
+            return console != null;
         }
     }
 }

@@ -16,6 +16,7 @@ namespace GameStore.Web
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 
             builder.Services.AddScoped<CustomersService>();
+            builder.Services.AddScoped<ConsolesService>();
 
             var app = builder.Build();
 
