@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GameStore.Domain
 {
@@ -13,6 +9,8 @@ namespace GameStore.Domain
         public string Console { get; set; }
         public double Price { get; set; }
         public int Stock { get; set; }
+
+        [Display(Name = "Units Sold")]
         public int TimesSold { get; set; }
     }
 }
