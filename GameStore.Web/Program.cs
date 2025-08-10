@@ -1,3 +1,4 @@
+using GameStore.Application;
 using GameStore.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ namespace GameStore.Web
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
+
+            builder.Services.AddScoped<CustomersService>();
 
             var app = builder.Build();
 

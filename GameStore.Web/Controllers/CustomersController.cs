@@ -1,23 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using GameStore.Application;
 using GameStore.Domain;
 using GameStore.Persistence;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.Web.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly DataContext _context;
+        private readonly CustomersService _customersService;
 
-        public CustomersController(DataContext context)
+        public CustomersController(CustomersService customersService)
         {
-            _context = context;
+            _customersService = customersService;
         }
 
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            var customers = await _customersService.GetAll();
+            return View(customers);
         }
 
         // GET: Customers/Details/5
@@ -28,8 +29,7 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _customersService.GetById(id);
 
             if (customer == null)
             {
@@ -45,18 +45,19 @@ namespace GameStore.Web.Controllers
             return View();
         }
 
-        // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Customers/Create     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,Phone")] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var createdCustomer = await _customersService.Create(customer);
+
+                if (createdCustomer)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(customer);
         }
@@ -69,7 +70,7 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _customersService.GetById(id);
 
             if (customer == null)
             {
@@ -79,8 +80,6 @@ namespace GameStore.Web.Controllers
         }
 
         // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,Phone")] Customer customer)
@@ -92,23 +91,12 @@ namespace GameStore.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var updatedCustomer = await _customersService.Update(customer);
+
+                if (updatedCustomer)
                 {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerExists(customer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
             return View(customer);
         }
@@ -121,8 +109,8 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _customersService.GetById(id);
+
             if (customer == null)
             {
                 return NotFound();
@@ -136,19 +124,20 @@ namespace GameStore.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _customersService.GetById(id);
+
             if (customer != null)
             {
-                _context.Customers.Remove(customer);
-            }
 
-            await _context.SaveChangesAsync();
+                await _customersService.Remove(customer);
+            }
             return RedirectToAction(nameof(Index));
         }
 
         private bool CustomerExists(int id)
         {
-            return _context.Customers.Any(e => e.Id == id);
+            var customer = _customersService.GetById(id);
+            return customer != null;
         }
     }
 }
