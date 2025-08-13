@@ -1,5 +1,5 @@
-﻿using GameStore.Application;
-using GameStore.Domain;
+﻿using GameStore.Application.Services;
+using GameStore.Domain.Entities;
 using GameStore.Persistence;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,4 @@
-using GameStore.Application;
+using GameStore.Application.Services;
 using GameStore.Persistence;
 using Microsoft.EntityFrameworkCore;
 

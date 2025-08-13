@@ -1,5 +1,5 @@
-﻿using GameStore.Application;
-using GameStore.Domain;
+﻿using GameStore.Application.Services;
+using GameStore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.Web.Controllers

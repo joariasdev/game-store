@@ -1,9 +1,8 @@
-﻿
-using GameStore.Domain;
+﻿using GameStore.Domain.Entities;
 using GameStore.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameStore.Application
+namespace GameStore.Application.Services
 {
     public class ConsolesService
     {

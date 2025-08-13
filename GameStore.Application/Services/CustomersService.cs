@@ -1,39 +1,38 @@
-﻿
-using GameStore.Domain;
+﻿using GameStore.Domain.Entities;
 using GameStore.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameStore.Application
+namespace GameStore.Application.Services
 {
-    public class GamesService
+    public class CustomersService
     {
         private readonly DataContext _context;
-        public GamesService(DataContext context)
+        public CustomersService(DataContext context)
         {
             _context = context;
         }
 
-        // Get all games
-        public async Task<List<Game>> GetAll()
+        // Get all customers
+        public async Task<List<Customer>> GetAll()
         {
-            return await _context.Games.ToListAsync();
+            return await _context.Customers.ToListAsync();
         }
 
-        // Get a game by id
-        public async Task<Game?> GetById(int? id)
+        // Get a customer by id
+        public async Task<Customer?> GetById(int? id)
         {
-            var game = await _context.Games
+            var customer = await _context.Customers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            return game;
+            return customer;
         }
 
-        // Create a new game in database
-        public async Task<bool> Create(Game game)
+        // Create a new customer in database
+        public async Task<bool> Create(Customer customer)
         {
             try
             {
-                _context.Add(game);
+                _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -44,13 +43,13 @@ namespace GameStore.Application
 
         }
 
-        // Update an existing game in database
-        public async Task<bool> Update(Game game)
+        // Update an existing customer in database
+        public async Task<bool> Update(Customer customer)
         {
             try
             {
 
-                _context.Update(game);
+                _context.Update(customer);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -60,13 +59,13 @@ namespace GameStore.Application
             }
         }
 
-        // Remove one game from database
-        public async Task<bool> Remove(Game game)
+        // Remove one customer from database
+        public async Task<bool> Remove(Customer customer)
         {
             try
             {
 
-                _context.Remove(game);
+                _context.Remove(customer);
                 await _context.SaveChangesAsync();
                 return true;
             }
