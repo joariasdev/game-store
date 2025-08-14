@@ -12,6 +12,10 @@ namespace GameStore.Persistence
         public DbSet<Game> Games { get; set; }
         public DbSet<GameConsole> Consoles { get; set; }
 
+        public DbSet<Invoice> Invoices { get; set; }
+
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()
