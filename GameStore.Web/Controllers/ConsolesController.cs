@@ -47,7 +47,7 @@ namespace GameStore.Web.Controllers
         // POST: Consoles/Create     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,Phone")] GameConsole console)
+        public async Task<IActionResult> Create(GameConsole console)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace GameStore.Web.Controllers
         // POST: Consoles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,Phone")] GameConsole console)
+        public async Task<IActionResult> Edit(int id, GameConsole console)
         {
             if (id != console.Id)
             {
