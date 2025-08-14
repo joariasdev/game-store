@@ -1,16 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace GameStore.Domain.Entities
+﻿namespace GameStore.Domain.Entities
 {
-    public class Game
+    public class Game : Product
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Console { get; set; }
-        public double Price { get; set; }
-        public int Stock { get; set; }
-
-        [Display(Name = "Units Sold")]
-        public int TimesSold { get; set; }
+        public string Platform { get; set; }
     }
 }
