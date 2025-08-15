@@ -1,16 +1,19 @@
 ﻿using GameStore.Application.Services;
 using GameStore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GameStore.Web.Controllers
 {
     public class InvoicesController : Controller
     {
         private readonly InvoicesService _invoicesService;
+        private readonly CustomersService _customersService;
 
-        public InvoicesController(InvoicesService invoicesService)
+        public InvoicesController(InvoicesService invoicesService, CustomersService customersService)
         {
             _invoicesService = invoicesService;
+            _customersService = customersService;
         }
 
         // GET: Invoices
@@ -39,8 +42,10 @@ namespace GameStore.Web.Controllers
         }
 
         // GET: Invoices/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var customers = await _customersService.GetAll();
+            ViewBag.Customers = new SelectList(customers, "Id", "FullName");  
             return View();
         }
 
@@ -70,6 +75,8 @@ namespace GameStore.Web.Controllers
             }
 
             var invoice = await _invoicesService.GetById(id);
+            var customers = await _customersService.GetAll();
+            ViewBag.Customers = new SelectList(customers, "Id", "FullName");
 
             if (invoice == null)
             {

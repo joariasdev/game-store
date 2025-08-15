@@ -15,13 +15,14 @@ namespace GameStore.Application.Services
         // Get all invoices
         public async Task<List<Invoice>> GetAll()
         {
-            return await _context.Invoices.ToListAsync();
+            return await _context.Invoices.Include(i => i.Customer).ToListAsync();
         }
 
         // Get a invoice by id
         public async Task<Invoice?> GetById(int? id)
         {
             var invoice = await _context.Invoices
+                .Include(i => i.Customer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             return invoice;

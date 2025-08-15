@@ -18,6 +18,8 @@ namespace GameStore.Web
             builder.Services.AddScoped<CustomersService>();
             builder.Services.AddScoped<ConsolesService>();
             builder.Services.AddScoped<GamesService>();
+            builder.Services.AddScoped<InvoicesService>();
+            builder.Services.AddScoped<InvoiceItemsService>();
 
             var app = builder.Build();
 
@@ -38,7 +40,7 @@ namespace GameStore.Web
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Invoices}/{action=Index}/{id?}");
 
             app.Run();
         }
