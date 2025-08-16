@@ -32,6 +32,7 @@ namespace GameStore.Application.Services
         public async Task<Invoice?> GetByIdWithItemsAsync(int? id)
         {
             var invoice = await _context.Invoices
+                .Include(i => i.Customer)
                 .Include(i => i.InvoiceItems)
                     .ThenInclude(ii => ii.Product)
                 .FirstOrDefaultAsync(i => i.Id == id);

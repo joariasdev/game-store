@@ -1,0 +1,41 @@
+﻿@model IEnumerable<InvoiceItem>
+
+<h4>Items</h4>
+@* <a asp-controller="InvoiceItems" asp-action="Create" asp-route-invoiceId="@ViewBag.InvoiceId">Add Product</a> *@
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>            
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @* <a asp-controller="InvoiceItems" asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
+                    @* <a asp-controller="InvoiceItems" asp-action="Details" asp-route-id="@item.Id">Details</a> | *@
+                    @* <a asp-controller="InvoiceItems" asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
