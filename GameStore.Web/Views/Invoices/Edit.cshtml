@@ -1,4 +1,4 @@
-﻿@model GameStore.Domain.Entities.Invoice
+﻿@model Invoice
 
 @{
     ViewData["Title"] = "Edit";
@@ -39,9 +39,7 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<h4>Items</h4>
-<a asp-controller="InvoiceItems" asp-action="Create" asp-route-invoiceId="@Model.Id">Add Product</a>
-<hr />
+@await Html.PartialAsync("_InvoiceItemsTable", Model.InvoiceItems, new ViewDataDictionary(ViewData) { { "InvoiceId", Model.Id } })
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

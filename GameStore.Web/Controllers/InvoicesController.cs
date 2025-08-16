@@ -9,11 +9,13 @@ namespace GameStore.Web.Controllers
     {
         private readonly InvoicesService _invoicesService;
         private readonly CustomersService _customersService;
+        private readonly InvoiceItemsService _invoiceItemsService;
 
-        public InvoicesController(InvoicesService invoicesService, CustomersService customersService)
+        public InvoicesController(InvoicesService invoicesService, CustomersService customersService, InvoiceItemsService invoiceItemsService)
         {
             _invoicesService = invoicesService;
             _customersService = customersService;
+            _invoiceItemsService = invoiceItemsService;
         }
 
         // GET: Invoices
@@ -31,7 +33,7 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var invoice = await _invoicesService.GetById(id);
+            var invoice = await _invoicesService.GetByIdWithItemsAsync(id);
 
             if (invoice == null)
             {
@@ -45,7 +47,7 @@ namespace GameStore.Web.Controllers
         public async Task<IActionResult> Create()
         {
             var customers = await _customersService.GetAll();
-            ViewBag.Customers = new SelectList(customers, "Id", "FullName");  
+            ViewBag.Customers = new SelectList(customers, "Id", "FullName");
             return View();
         }
 
@@ -74,14 +76,17 @@ namespace GameStore.Web.Controllers
                 return NotFound();
             }
 
-            var invoice = await _invoicesService.GetById(id);
-            var customers = await _customersService.GetAll();
-            ViewBag.Customers = new SelectList(customers, "Id", "FullName");
+            var invoice = await _invoicesService.GetByIdWithItemsAsync(id);
 
             if (invoice == null)
             {
                 return NotFound();
             }
+
+            var customers = await _customersService.GetAll();
+
+            ViewBag.Customers = new SelectList(customers, "Id", "FullName");
+
             return View(invoice);
         }
 
