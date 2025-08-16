@@ -20,6 +20,7 @@ namespace GameStore.Web
             builder.Services.AddScoped<GamesService>();
             builder.Services.AddScoped<InvoicesService>();
             builder.Services.AddScoped<InvoiceItemsService>();
+            builder.Services.AddScoped<ProductsService>();
 
             var app = builder.Build();
 

@@ -39,6 +39,10 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<h4>Items</h4>
+<a asp-controller="InvoiceItems" asp-action="Create" asp-route-invoiceId="@Model.Id">Add Product</a>
+<hr />
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,16 +1,19 @@
 ﻿using GameStore.Application.Services;
 using GameStore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GameStore.Web.Controllers
 {
     public class InvoiceItemsController : Controller
     {
-        private readonly InvoiceItemsService _invoiceItemsService;
+        private readonly InvoiceItemsService _invoiceItemsService;       
+        private readonly ProductsService _productsService;
 
-        public InvoiceItemsController(InvoiceItemsService invoiceItemsService)
+        public InvoiceItemsController(InvoiceItemsService invoiceItemsService, ProductsService productsService)
         {
-            _invoiceItemsService = invoiceItemsService;
+            _invoiceItemsService = invoiceItemsService;            
+            _productsService = productsService;
         }
 
         // GET: InvoiceItems
@@ -39,8 +42,11 @@ namespace GameStore.Web.Controllers
         }
 
         // GET: InvoiceItems/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int invoiceId)
         {
+            ViewBag.InvoiceId = invoiceId;
+            var products = await _productsService.GetAll();
+            ViewBag.Products = new SelectList(products, "Id", "Name");
             return View();
         }
 
@@ -49,6 +55,9 @@ namespace GameStore.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(InvoiceItem invoiceItem)
         {
+            var product = await _productsService.GetById(invoiceItem.ProductId);
+            invoiceItem.Price = product.Price;
+
             if (ModelState.IsValid)
             {
                 var createdInvoiceItem = await _invoiceItemsService.Create(invoiceItem);
