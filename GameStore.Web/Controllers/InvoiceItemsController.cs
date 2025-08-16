@@ -7,12 +7,12 @@ namespace GameStore.Web.Controllers
 {
     public class InvoiceItemsController : Controller
     {
-        private readonly InvoiceItemsService _invoiceItemsService;       
+        private readonly InvoiceItemsService _invoiceItemsService;
         private readonly ProductsService _productsService;
 
         public InvoiceItemsController(InvoiceItemsService invoiceItemsService, ProductsService productsService)
         {
-            _invoiceItemsService = invoiceItemsService;            
+            _invoiceItemsService = invoiceItemsService;
             _productsService = productsService;
         }
 
@@ -64,7 +64,8 @@ namespace GameStore.Web.Controllers
 
                 if (createdInvoiceItem)
                 {
-                    return RedirectToAction(nameof(Index));
+                    //return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Edit", "Invoices", new { id = invoiceItem.InvoiceId });
                 }
             }
             return View(invoiceItem);
@@ -103,7 +104,7 @@ namespace GameStore.Web.Controllers
 
                 if (updatedInvoiceItem)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Edit", "Invoices", new { id = invoiceItem.InvoiceId });
                 }
             }
             return View(invoiceItem);
@@ -139,7 +140,7 @@ namespace GameStore.Web.Controllers
 
                 await _invoiceItemsService.Remove(invoiceItem);
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Edit", "Invoices", new { id = invoiceItem.InvoiceId });
         }
 
         private bool InvoiceItemExists(int id)
