@@ -9,7 +9,8 @@ namespace GameStore.Domain.Entities
         [Display(Name = "Customer")]
         public int CustomerId { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
-        public double Total { get; set; } = 0;            
+        public double Total { get; set; } = 0;
+        public double CalculatedTotal => InvoiceItems?.Sum(item => item.Total) ?? 0;
         public Customer? Customer { get; set; }
         public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
     }

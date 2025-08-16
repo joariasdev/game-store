@@ -13,7 +13,8 @@ namespace GameStore.Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
+            builder.Services.AddDbContext<DataContext>(options => 
+            options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 
             builder.Services.AddScoped<CustomersService>();
             builder.Services.AddScoped<ConsolesService>();
