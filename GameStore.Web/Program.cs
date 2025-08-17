@@ -1,3 +1,7 @@
+using GameStore.Application.Services;
+using GameStore.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 namespace GameStore.Web
 {
     public class Program
@@ -8,6 +12,16 @@ namespace GameStore.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<DataContext>(options => 
+            options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
+
+            builder.Services.AddScoped<CustomersService>();
+            builder.Services.AddScoped<ConsolesService>();
+            builder.Services.AddScoped<GamesService>();
+            builder.Services.AddScoped<InvoicesService>();
+            builder.Services.AddScoped<InvoiceItemsService>();
+            builder.Services.AddScoped<ProductsService>();
 
             var app = builder.Build();
 
@@ -28,7 +42,7 @@ namespace GameStore.Web
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Invoices}/{action=Index}/{id?}");
 
             app.Run();
         }

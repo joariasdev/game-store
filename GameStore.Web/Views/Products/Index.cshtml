@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Tope Sellers";
+}
+
+<h1>Top Sellers</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                Platform/Manufacturer
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimesSold)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                    @if (item is Game game)
+                    {
+                        @Html.DisplayFor(modelItem => game.Platform)
+                    }
+                    else if (item is GameConsole console)
+                    {
+                        @Html.DisplayFor(modelItem => console.Manufacturer)
+                    }
+             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimesSold)
+            </td>            
+        </tr>
+}
+    </tbody>
+</table>
