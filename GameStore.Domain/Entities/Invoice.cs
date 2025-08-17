@@ -4,6 +4,7 @@ namespace GameStore.Domain.Entities
 {
     public class Invoice
     {
+        [Display(Name = "Invoice")]
         public int Id { get; set; }
 
         [Display(Name = "Customer")]
