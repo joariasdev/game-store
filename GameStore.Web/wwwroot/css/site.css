@@ -18,5 +18,33 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: "Source Sans 3", sans-serif;
+    background-color: #B9E5E8;
 }
+
+header nav {
+    background-color: #FFFBDE;
+}
+
+td {
+    vertical-align: middle
+}
+
+.btn-dark:hover {
+    background-color: #FFFBDE;
+    color: black;
+    outline: none;
+}
+
+.form-control {
+    background-color: #FFFBDE;
+    outline: none;
+}
+
+.form-control:focus {
+    background-color: #FFFBDE;
+    outline: none;
+    box-shadow: none;
+}
+

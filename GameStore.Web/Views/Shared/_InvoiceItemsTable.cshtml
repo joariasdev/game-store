@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<InvoiceItem>
 
-<h4>Items</h4>
-<a asp-controller="InvoiceItems" asp-action="Create" asp-route-invoiceId="@ViewBag.InvoiceId">Add Product</a>
+<h4 class="mt-4">Items</h4>
+<a asp-controller="InvoiceItems" asp-action="Create" asp-route-invoiceId="@ViewBag.InvoiceId" class="btn btn-dark mt-2">Add Product</a>
 <hr />
 
 <table class="table">
@@ -31,9 +31,8 @@
                     @Html.DisplayFor(modelItem => item.Total)
                 </td>
                 <td>
-                    <a asp-controller="InvoiceItems" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    @* <a asp-controller="InvoiceItems" asp-action="Details" asp-route-id="@item.Id">Details</a> | *@
-                    <a asp-controller="InvoiceItems" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-controller="InvoiceItems" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark">Edit</a>                    
+                    <a asp-controller="InvoiceItems" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-dark">Delete</a>
                 </td>
             </tr>
         }
