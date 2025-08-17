@@ -18,9 +18,14 @@ namespace GameStore.Application.Services
             return await _context.Products.ToListAsync();
         }
 
+        public async Task<List<Product>> GetAllInStock()
+        {
+            return await _context.Products.Where(p => p.Stock > 0).ToListAsync();
+        }
+
         public async Task<List<Product>> GetAllOrderedBySales()
         {
-            return await _context.Products.OrderByDescending(p => p.TimesSold).ToListAsync();
+            return await _context.Products.Where(p => p.TimesSold > 0).OrderByDescending(p => p.TimesSold).ToListAsync();
         }
 
         // Get a product by id

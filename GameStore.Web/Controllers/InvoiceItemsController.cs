@@ -45,7 +45,7 @@ namespace GameStore.Web.Controllers
         public async Task<IActionResult> Create(int invoiceId)
         {
             ViewBag.InvoiceId = invoiceId;
-            var products = await _productsService.GetAll();
+            var products = await _productsService.GetAllInStock();
             ViewBag.Products = new SelectList(products, "Id", "Name");
             return View();
         }
