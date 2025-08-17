@@ -18,6 +18,14 @@ namespace GameStore.Application.Services
             return await _context.Invoices.Include(i => i.Customer).Include(i => i.InvoiceItems).ToListAsync();
         }
 
+        public async Task<List<Invoice>> GetByStatus(string status)
+        {
+            return await _context.Invoices
+                .Where(i => i.Status == status)
+                .Include(i => i.Customer)
+                .Include(i => i.InvoiceItems).ToListAsync();
+        }        
+
         // Get a invoice by id
         public async Task<Invoice?> GetById(int? id)
         {
@@ -115,7 +123,5 @@ namespace GameStore.Application.Services
                 return false;
             }
         }
-
-
     }
 }

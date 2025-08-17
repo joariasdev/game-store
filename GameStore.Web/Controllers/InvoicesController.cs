@@ -21,7 +21,13 @@ namespace GameStore.Web.Controllers
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            var invoices = await _invoicesService.GetAll();
+            var invoices = await _invoicesService.GetByStatus("Open");
+            return View(invoices);
+        }
+
+        public async Task<IActionResult> History()
+        {
+            var invoices = await _invoicesService.GetByStatus("Completed");
             return View(invoices);
         }
 
