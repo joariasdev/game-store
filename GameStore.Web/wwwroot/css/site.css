@@ -37,6 +37,11 @@ td {
     outline: none;
 }
 
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 .form-control {
     background-color: #FFFBDE;
     outline: none;
