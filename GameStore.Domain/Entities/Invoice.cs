@@ -11,6 +11,7 @@ namespace GameStore.Domain.Entities
         public DateTime Date { get; set; } = DateTime.Now;
         public double Total { get; set; } = 0;
         public double CalculatedTotal => InvoiceItems?.Sum(item => item.Total) ?? 0;
+        public string Status { get; set; } = "Open";
         public Customer? Customer { get; set; }
         public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
     }

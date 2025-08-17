@@ -88,6 +88,34 @@ namespace GameStore.Application.Services
             }
         }
 
+        // Completes order in database
+        public async Task<bool> Checkout(Invoice invoice)
+        {
+            try
+            {
+                foreach (var item in invoice.InvoiceItems)
+                {
+                    var product = _context.Products.FirstOrDefault(p => p.Id == item.ProductId);
+
+                    if (product.Stock <= 0 || product.Stock < item.Quantity) throw new Exception("Product out of stock");
+
+                    product.Stock = product.Stock - item.Quantity;
+                    product.TimesSold = product.TimesSold + item.Quantity;
+                    _context.Update(product);
+                }
+
+                invoice.Status = "Completed";
+
+                _context.Update(invoice);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
 
     }
 }

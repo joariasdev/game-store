@@ -145,10 +145,36 @@ namespace GameStore.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceExists(int id)
+        public async Task<IActionResult> Checkout(int? id)
         {
-            var invoice = _invoicesService.GetById(id);
-            return invoice != null;
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _invoicesService.GetByIdWithItemsAsync(id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            return View(invoice);
+        }
+
+        // POST: Invoices/Delete/5
+        [HttpPost, ActionName("Checkout")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(int id)
+        {
+            var invoice = await _invoicesService.GetByIdWithItemsAsync(id);
+
+            if (invoice != null)
+            {
+
+                await _invoicesService.Checkout(invoice);
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
